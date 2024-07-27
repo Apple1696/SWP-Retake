@@ -4,7 +4,7 @@ import { Button, Stack, IconButton } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { Modal, Form, Input, Select, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
 import handleRedirect from './../../HandleFunction/handleRedirect';
 import EditProduct from './EditProduct';
@@ -20,15 +20,14 @@ const Product = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // Fetch data from the API
-    axios.get('https://666aa8737013419182d04e24.mockapi.io/api/Products')
+    axios.get('https://66a4b40a5dc27a3c19099545.mockapi.io/Item')
       .then(response => {
-        setData(response.data); // Assume the response contains an array of products
+        setData(response.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []);
 
   const handleEdit = (row) => {
     setCurrentRow(row);
@@ -37,9 +36,7 @@ const Product = () => {
 
   const handleDelete = (row) => {
     setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
-    console.log("Delete", row.original.id);
-    // API call to delete the item
-    axios.delete(`https://666aa8737013419182d04e24.mockapi.io/api/Products${row.original.id}`)
+    axios.delete(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item/${row.original.id}`)
       .then(response => {
         console.log('Item deleted:', response.data);
       })
@@ -53,29 +50,44 @@ const Product = () => {
   };
 
   const handleAddSubmit = (values) => {
-    console.log('Form values:', values);
-    // Add the new product to the state
-    setData((prevData) => [...prevData, values]);
-    // Close the modal
-    setIsAddModalVisible(false);
-    // Clear the form
-    form.resetFields();
-    // API call to add the item
-    axios.post('https://666aa8737013419182d04e24.mockapi.io/api/Products', values)
+    const formData = new FormData();
+    formData.append('category', values.category);
+    formData.append('name', values.name);
+    formData.append('gold_weight', values.gold_weight);
+    formData.append('price', values.price);
+    formData.append('status', values.status);
+    formData.append('image', values.image[0]?.originFileObj);
+  
+    axios.post('https://66a4b40a5dc27a3c19099545.mockapi.io/Item', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then(response => {
+        setData((prevData) => [...prevData, response.data]);
         console.log('Item added:', response.data);
       })
       .catch(error => {
         console.error('Error adding item:', error);
       });
+  
+    setIsAddModalVisible(false);
+    form.resetFields();
   };
+  
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id', // Adjusted to match actual API response
+        accessorKey: 'id',
         header: 'ID',
         size: 150,
+      },
+      {
+        accessorKey: 'image',
+        header: 'Image',
+        size: 150,
+        Cell: ({ cell }) => <img src={cell.getValue()} alt="product" style={{ width: '50px', height: '50px' }} />,
       },
       {
         accessorKey: 'name',
@@ -83,18 +95,28 @@ const Product = () => {
         size: 150,
       },
       {
-        accessorKey: 'category', // Adjusted to match actual API response
-        header: 'Category',
+        accessorKey: 'gold_weight',
+        header: 'Gold weight',
         size: 150,
       },
       {
-        accessorKey: 'price', // Adjusted to match actual API response
+        accessorKey: 'price',
         header: 'Price',
         size: 150,
       },
       {
-        accessorKey: 'quantity', // Adjusted to match actual API response
-        header: 'Quantity',
+        accessorKey: 'status',
+        header: 'Status',
+        size: 150,
+      },
+      {
+        accessorKey: 'created_at',
+        header: 'Created at',
+        size: 150,
+      },
+      {
+        accessorKey: 'updated_at',
+        header: 'Updated at',
         size: 150,
       },
       {
@@ -132,7 +154,7 @@ const Product = () => {
       </div>
 
       <EditProduct
-isVisible={isEditModalVisible}
+        isVisible={isEditModalVisible}
         onClose={() => setIsEditModalVisible(false)}
         rowData={currentRow ? currentRow.original : null}
         updateData={(updatedRow) => {
@@ -171,20 +193,20 @@ isVisible={isEditModalVisible}
             </Select>
           </Form.Item>
           <Form.Item
-            name="id"
-            label="Product ID"
-            rules={[{ required: true, message: 'Please input the product ID!' }]}
+            name="name"
+            label="Jewelry name"
+            rules={[{ required: true, message: 'Please input the product title!' }]}
             style={{ marginBottom: '10px' }}
           >
             <Input style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
-            name="name"
-            label="Product Title"
-            rules={[{ required: true, message: 'Please input the product title!' }]}
+            name="gold_weight"
+            label="Gold Weight"
+            rules={[{ required: true, message: 'Please input the gold weight!' }]}
             style={{ marginBottom: '10px' }}
           >
-            <Input style={{ width: '100%' }} />
+            <Input type="number" style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="price"
@@ -193,6 +215,14 @@ isVisible={isEditModalVisible}
             style={{ marginBottom: '10px' }}
           >
             <Input type="number" style={{ width: '100%' }} />
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label="Status"
+            rules={[{ required: true, message: 'Please input the status!' }]}
+            style={{ marginBottom: '10px' }}
+          >
+            <Input style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
             name="image"
@@ -205,7 +235,7 @@ isVisible={isEditModalVisible}
             <Upload
               name="image"
               listType="picture"
-              beforeUpload={() => false} // Prevent automatic upload
+              beforeUpload={() => false}
               style={{ width: '100%' }}
             >
               <Button icon={<UploadOutlined />} style={{ width: '100%' }}>Click to Upload</Button>
