@@ -5,8 +5,9 @@ import {
   FaRegChartBar,
   FaMoneyBillWave,
   FaRegGem,
-  FaHandshake
+  FaHandshake,
 } from "react-icons/fa";
+import { FaPerson } from "react-icons/fa6";
 import { BsCurrencyDollar } from "react-icons/bs";
 import { NavLink } from 'react-router-dom';
 import { IoMdExit } from "react-icons/io";
@@ -54,6 +55,12 @@ const Sidebar = ({ children }) => {
       path: "/product",
       name: "Product",
       icon: <FaRegGem />
+    },
+    {
+      path: "/customer",
+      name: "Customer",
+      icon: <FaPerson />
+
     },
     {
       path: "/promotion",
