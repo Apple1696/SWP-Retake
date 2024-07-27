@@ -81,43 +81,43 @@ const Product = () => {
       {
         accessorKey: 'id',
         header: 'ID',
-        size: 150,
+        size: 10,
       },
       {
         accessorKey: 'image',
         header: 'Image',
-        size: 150,
+        size: 10,
         Cell: ({ cell }) => <img src={cell.getValue()} alt="product" style={{ width: '50px', height: '50px' }} />,
       },
       {
         accessorKey: 'name',
         header: 'Name',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'gold_weight',
         header: 'Gold weight',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'price',
         header: 'Price',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'created_at',
         header: 'Created at',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'updated_at',
         header: 'Updated at',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'action',
