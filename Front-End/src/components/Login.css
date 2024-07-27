@@ -1,0 +1,48 @@
+
+body {
+  background-color: #f0f0f0;
+
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  margin-top: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  margin-right: 10px;
+}
+
+.background-image {
+  /* background-image: url('Login.jpg'); */
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  background-color: white;
+  padding: 20px;
+  border: 10px solid #163957;
+  animation: slide-in 1s ease-out forwards;
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
