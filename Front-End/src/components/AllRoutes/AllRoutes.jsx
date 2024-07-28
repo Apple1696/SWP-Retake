@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Sell from './../pages/Sell/Sell';
@@ -50,7 +49,7 @@ const App = () => {
     <BrowserRouter>
       <AllRoutes />
     </BrowserRouter>
-  );Y
+  );
 };
 
 export default App;

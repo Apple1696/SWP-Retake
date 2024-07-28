@@ -1,16 +1,17 @@
+/* eslint-disable no-useless-catch */
 import axios from 'axios';
 
 const UserService = {
-  login: async (username, password) => {
+  login: async (email, password) => {
     try {
-      const response = await axios.post('https://your-api-url.com/api/login', {
-        username,
+      const response = await axios.post('https://localhost:44362/api/Employees/login', {
+        email,
         password,
       });
-      if (response.data.success) {
-        return true;
+      if (response.data.token) {
+        return response.data.token;
       } else {
-        throw new Error('Invalid username or password');
+        throw new Error('Invalid email or password');
       }
     } catch (error) {
       throw error;
@@ -19,4 +20,4 @@ const UserService = {
 };
 
 
-  export default UserService;
+export default UserService;
