@@ -1,46 +1,34 @@
 import React, { useState } from 'react';
 import './Login.css';
-import login_ic from '../assets/Login.jpg';
 import { Helmet } from 'react-helmet';
-import axios from 'axios';
-import handleRedirect from './HandleFunction/handleRedirect';
+import UserService from '../services/UserService';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Fetch the list of users from the API
-      const response = await axios.get('https://6670fb58e083e62ee439a8f8.mockapi.io/Account');
-      const users = response.data;
-
-      // Check if the provided username and password exist in the fetched data
-      const user = users.find(user => user.username === username && user.password === password);
-
-      if (user) {
-        // Login successful, redirect to dashboard page
+      const token = await UserService.login(email, password);
+      if (token) {
+        localStorage.setItem('token', token); // Store the token in localStorage or any other storage
         window.location.href = '/dashboard';
-      } else {
-        // Credentials are incorrect, display error message
-        setErrorMessage('Invalid username or password. Please try again.');
       }
     } catch (error) {
-      // API returned an error, display error message
-      setErrorMessage('Error logging in. Please try again.'); 
+      setErrorMessage('Invalid email or password. Please try again.');
       console.error('Error:', error);
     }
   };
 
   const handleReset = () => {
-    setUsername('');
+    setEmail('');
     setPassword('');
   };
 
   return (
-    <div>
+    <div className="login-container">
       <Helmet>
         <link
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -49,58 +37,44 @@ const Login = () => {
           crossOrigin="anonymous"
         />
       </Helmet>
-      <div className="background-image" style={{ backgroundImage: `url(${login_ic})` }}>
+      <div className="login-content">
         <div className="login-form">
-          <h1 style={{ color: '#163957' }}>
-            Administrator Login
-          </h1>
+          <h1>Login into your account</h1>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label style={{ color: '#163957' }} htmlFor="username">Username</label>
-              <input
-                type="text"
-                className="form-control"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-              />
+              <label htmlFor="email">Email</label>
+              <div className="input-group">
+                <input
+                  type="email"
+                  className="form-control"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="alex@gmail.com"
+                />
+                <span className="input-group-text">@</span>
+              </div>
             </div>
             <div className="form-group">
-              <label style={{ color: '#163957' }} htmlFor="password">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-              />
-            </div>
-            <div className="rows">
-              <div className="col-md-6">
-                <button
-                  style={{ width: '600px' }}
-                  type="submit"
-                  className="btn btn-primary"
-                >
-                  Login
-                </button>
+              <label htmlFor="password">Password</label>
+              <div className="input-group">
+                <input
+                  type="password"
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                />
+                <span className="input-group-text">🔒</span>
               </div>
-              <br />
-              <div className="col-md-6">
-                <button
-                  style={{ width: '600px' }}
-                  type="reset"
-                  className="btn btn-primary"
-                  onClick={handleReset}
-                >
-                  Reset
-                </button>
-              </div>
-              <div style={{ color: 'red' }}>{errorMessage}</div>
             </div>
+            <button type="submit" className="btn btn-primary btn-block">Login</button>
+            <div className="error-message">{errorMessage}</div>
           </form>
+        </div>
+        <div className="login-image">
+          <img src="https://img.freepik.com/premium-photo/diamonds-gem-black-background-jewelry-made-with-gemstones-banner-designer-jewelry-shop_726113-1813.jpg" alt="Login" />
         </div>
       </div>
     </div>
