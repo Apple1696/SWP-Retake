@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import React, { useEffect, useMemo, useState } from 'react';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import { TextField, Button, Box, Typography, IconButton } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddCustomer from './AddCustomer'; // Import AddCustomer component
 
 const theme = createTheme({

@@ -1,5 +1,5 @@
+import { Form, Input, Modal } from 'antd';
 import React from 'react';
-import { Modal, Form, Input, Button } from 'antd';
 
 const AddCustomer = ({ isVisible, onClose, onAddCustomer }) => {
   const [form] = Form.useForm();
