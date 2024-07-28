@@ -12,6 +12,7 @@ import PickPromotion from './../pages/Sell/PickPromotion';
 import GoldValue from './../pages/GoldValue/GoldValue';
 import Payment from '../pages/Sell/Payment';
 import CustomerList from './../pages/Customer/CustomerList';
+import CreateOrder from '../pages/OrderReport/CreateOrder';
 
 const AllRoutes = () => {
   const location = useLocation();
@@ -27,6 +28,7 @@ const AllRoutes = () => {
             <Route path="/sell" element={<Sell />} />
             <Route path="/pick-promotion" element={<PickPromotion />} />
             <Route path="/order-report" element={<OrderReport />} />
+            <Route path="/create-order" element={<CreateOrder />} />
             <Route path="/customer" element={<CustomerList />} />
             <Route path="/promotion" element={<Promotion />} />
             <Route path="/payment" element={<Payment />} />

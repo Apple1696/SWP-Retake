@@ -5,11 +5,13 @@ import {
 } from 'material-react-table';
 import React, { useEffect, useMemo, useState } from 'react';
 import './OrderReport.css';
+import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const OrderReport = () => {
   
   const [data, setData] = useState([]);
   const [isCreating, setIsCreating] = useState(false);
+  const {createOrder} = handleRedirect();
   const [newOrder, setNewOrder] = useState({
     order_id: '',
     full_name: '',
@@ -70,9 +72,7 @@ const OrderReport = () => {
     data,
   });
 
-  const handleCreateOrder = () => {
-    setIsCreating(true);
-  };
+ 
 
   const handleCancelCreateOrder = () => {
     setIsCreating(false);
@@ -173,7 +173,7 @@ const OrderReport = () => {
           </form>
         </div>
       ) : (
-        <button className="create-order-button" onClick={handleCreateOrder}>
+        <button className="create-order-button" onClick={createOrder}>
           Create New Order
         </button>
       )}
