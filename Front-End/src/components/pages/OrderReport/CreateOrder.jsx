@@ -1,8 +1,6 @@
-import { Button, Form, Select } from 'antd';
+import { Button, Input, Form, Select } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Form, Input, Select, Button } from 'antd';
-import axios from 'axios';
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const { Option } = Select;
@@ -51,7 +49,7 @@ export default function CreateOrder() {
     setOrderItems([...orderItems, { id: '', price: '' }]);
   };
 
-  const {cancelOrder}= handleRedirect();
+  const { cancelOrder } = handleRedirect();
   return (
     <>
       <Form layout="vertical">
@@ -138,10 +136,10 @@ export default function CreateOrder() {
           </div>
         </div>
       </Form>
-      <br/>
+      <br />
       <Button type="primary" onClick={cancelOrder} style={{ width: '50%' }}>
-              Cancel
-            </Button>
+        Cancel
+      </Button>
     </>
   );
 }
