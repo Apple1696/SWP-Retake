@@ -5,7 +5,6 @@ import axios from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import CustomTable from '../../Designs/CustomTable';
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import AddCustomer from './AddCustomer'; // Import AddCustomer component
 
 const theme = createTheme({
   palette: {
@@ -79,18 +78,7 @@ const Sell = () => {
       });
   };
 
-  const handleAddCustomer = (newCustomer) => {
-    axios.post('https://666aa8737013419182d04e24.mockapi.io/api/Customers', newCustomer)
-      .then(response => {
-        alert('Customer added successfully!');
-        // console.log('New customer added:', response.data);
-        // You can add further logic to handle the new customer data, such as updating state
-      })
-      .catch(error => {
-        console.error('Error adding the customer:', error);
-        alert('Error adding the customer.');
-      });
-  };
+
 
   const columns = useMemo(
     () => [
@@ -155,13 +143,7 @@ const Sell = () => {
           >
             Inspect
           </Button>
-          <Button
-            variant="contained"
-            sx={{ mr: 2 }}
-            onClick={() => setIsCustomerModalVisible(true)}
-          >
-            Add new customer
-          </Button>
+         
         </Box>
         {showCart && (
           <Box mb={2}>
@@ -236,11 +218,7 @@ const Sell = () => {
           </Box>
         )}
 
-        <AddCustomer
-          isVisible={isCustomerModalVisible}
-          onClose={() => setIsCustomerModalVisible(false)}
-          onAddCustomer={handleAddCustomer}
-        />
+    
       </Box>
     </ThemeProvider>
   );

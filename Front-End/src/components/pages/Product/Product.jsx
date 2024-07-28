@@ -2,12 +2,11 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { Button, Stack, IconButton } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Modal, Form, Input, Select, Upload } from 'antd';
+import { Modal, Form, Input, Select, Upload, notification } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
 import handleRedirect from './../../HandleFunction/handleRedirect';
-import EditProduct from './EditProduct';
 
 const { Option } = Select;
 
@@ -18,6 +17,7 @@ const Product = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [currentRow, setCurrentRow] = useState(null);
   const [form] = Form.useForm();
+  const [editForm] = Form.useForm();
 
   useEffect(() => {
     axios.get('https://66a4b40a5dc27a3c19099545.mockapi.io/Item')
@@ -30,7 +30,11 @@ const Product = () => {
   }, []);
 
   const handleEdit = (row) => {
-    setCurrentRow(row);
+    setCurrentRow(row.original);
+    editForm.setFieldsValue({
+      price: row.original.price,
+      quantity: row.original.quantity,
+    });
     setIsEditModalVisible(true);
   };
 
@@ -39,9 +43,13 @@ const Product = () => {
     axios.delete(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item/${row.original.id}`)
       .then(response => {
         console.log('Item deleted:', response.data);
+        notification.success({ message: 'Customer deleted successfully' });
+
       })
       .catch(error => {
         console.error('Error deleting item:', error);
+        notification.error({ message: 'Failed to delete customer' });
+
       });
   };
 
@@ -57,7 +65,7 @@ const Product = () => {
     formData.append('price', values.price);
     formData.append('status', values.status);
     formData.append('image', values.image[0]?.originFileObj);
-  
+
     axios.post('https://66a4b40a5dc27a3c19099545.mockapi.io/Item', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -70,54 +78,71 @@ const Product = () => {
       .catch(error => {
         console.error('Error adding item:', error);
       });
-  
+
     setIsAddModalVisible(false);
     form.resetFields();
   };
-  
+
+  const handleEditSubmit = (values) => {
+    const updatedRow = { ...currentRow, ...values };
+    axios.put(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item/${currentRow.id}`, updatedRow)
+      .then(response => {
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.id === updatedRow.id ? { ...item, ...updatedRow } : item
+          )
+        );
+        console.log('Item updated:', response.data);
+      })
+      .catch(error => {
+        console.error('Error updating item:', error);
+      });
+
+    setIsEditModalVisible(false);
+  };
 
   const columns = useMemo(
     () => [
       {
         accessorKey: 'id',
         header: 'ID',
-        size: 150,
+        size: 10,
       },
       {
         accessorKey: 'image',
         header: 'Image',
-        size: 150,
+        size: 10,
         Cell: ({ cell }) => <img src={cell.getValue()} alt="product" style={{ width: '50px', height: '50px' }} />,
       },
       {
         accessorKey: 'name',
         header: 'Name',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'gold_weight',
         header: 'Gold weight',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'price',
         header: 'Price',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'status',
         header: 'Status',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'created_at',
         header: 'Created at',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'updated_at',
         header: 'Updated at',
-        size: 150,
+        size: 15,
       },
       {
         accessorKey: 'action',
@@ -153,18 +178,36 @@ const Product = () => {
         <MaterialReactTable columns={columns} data={data} />
       </div>
 
-      <EditProduct
-        isVisible={isEditModalVisible}
-        onClose={() => setIsEditModalVisible(false)}
-        rowData={currentRow ? currentRow.original : null}
-        updateData={(updatedRow) => {
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.id === updatedRow.id ? { ...item, ...updatedRow } : item
-            )
-          );
-        }}
-      />
+      <Modal
+        title="Edit Item"
+        visible={isEditModalVisible}
+        onCancel={() => setIsEditModalVisible(false)}
+        onOk={() => editForm.submit()}
+        style={{ backgroundColor: '#f0f0f0' }}
+      >
+        <Form
+          form={editForm}
+          layout="vertical"
+          onFinish={handleEditSubmit}
+          initialValues={currentRow}
+          style={{ backgroundColor: 'white', padding: '20px' }}
+        >
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Name required' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="gold_weight"
+            label="Gold weight"
+            rules={[{ required: true, message: 'Gold weight required' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Modal
         title="Add Product"
