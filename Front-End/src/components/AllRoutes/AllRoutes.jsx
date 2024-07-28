@@ -10,9 +10,9 @@ import Rebuy from './../pages/Rebuy/Rebuy';
 import OrderReport from './../pages/OrderReport/OrderReport';
 import PickPromotion from './../pages/Sell/PickPromotion';
 import GoldValue from './../pages/GoldValue/GoldValue';
-import Payment from '../pages/Sell/Payment';
 import CustomerList from './../pages/Customer/CustomerList';
 import CreateOrder from '../pages/OrderReport/CreateOrder';
+import Payment from '../pages/Payment/Payment';
 
 const AllRoutes = () => {
   const location = useLocation();

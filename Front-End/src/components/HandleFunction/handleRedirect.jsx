@@ -6,12 +6,13 @@ export default function handleRedirect() {
     const handleLogoutConfirm=()=>navigate('/login')
     const payment=()=>navigate('/payment')
     const createOrder=()=>navigate('/create-order')
-
+    const cancelOrder=()=>navigate('/order-report')
     return{
         pickPromotion,
         handleLogoutConfirm,
         payment,
         createOrder,
+        cancelOrder,
 
     }
  

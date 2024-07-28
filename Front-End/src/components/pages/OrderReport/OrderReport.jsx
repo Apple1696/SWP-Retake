@@ -8,21 +8,13 @@ import './OrderReport.css';
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const OrderReport = () => {
-  
+
   const [data, setData] = useState([]);
-  const [isCreating, setIsCreating] = useState(false);
-  const {createOrder} = handleRedirect();
-  const [newOrder, setNewOrder] = useState({
-    order_id: '',
-    full_name: '',
-    phone_number: '',
-    total: '',
-    date: '',
-    status: '',
-  });
+  const { createOrder } = handleRedirect();
+
 
   useEffect(() => {
-    axios.get('https://666efd61f1e1da2be521af94.mockapi.io/Order')
+    axios.get('https://6678e6e40bd452505620352b.mockapi.io/Order')
       .then((response) => {
         setData(response.data);
       })
@@ -33,30 +25,31 @@ const OrderReport = () => {
 
   const columns = useMemo(
     () => [
+
       {
-        accessorKey: 'order_id',
-        header: 'Order ID',
+        accessorKey: 'customer',
+        header: 'Customer',
         size: 100,
       },
       {
-        accessorKey: 'full_name',
-        header: 'Customer Name',
-        size: 200,
-      },
-      {
-        accessorKey: 'phone_number',
-        header: 'Contact',
-        size: 150,
-      },
-      {
-        accessorKey: 'total',
-        header: 'Total',
+        accessorKey: 'staff',
+        header: 'Staff',
         size: 100,
       },
       {
-        accessorKey: 'date',
-        header: 'Date',
+        accessorKey: 'type',
+        header: 'Type',
         size: 150,
+      },
+      {
+        accessorKey: 'price',
+        header: 'Price',
+        size: 100,
+      },
+      {
+        accessorKey: 'counter',
+        header: 'Counter',
+        size: 100,
       },
       {
         accessorKey: 'status',
@@ -72,111 +65,13 @@ const OrderReport = () => {
     data,
   });
 
- 
-
-  const handleCancelCreateOrder = () => {
-    setIsCreating(false);
-    setNewOrder({
-      order_id: '',
-      full_name: '',
-      phone_number: '',
-      total: '',
-      date: '',
-      status: '',
-    });
-  };
-
-  const handleSaveNewOrder = () => {
-    axios.post('https://666efd61f1e1da2be521af94.mockapi.io/Order', newOrder)
-      .then((response) => {
-        setData([...data, response.data]);
-        setIsCreating(false);
-        setNewOrder({
-          order_id: '',
-          full_name: '',
-          phone_number: '',
-          total: '',
-          date: '',
-          status: '',
-        });
-      })
-      .catch((error) => {
-        console.error('Error creating new order: ', error);
-      });
-  };
-
-  const handleInputChange = (event) => {
-    setNewOrder({ ...newOrder, [event.target.name]: event.target.value });
-  };
-
   return (
     <div>
       <h1>Order Report</h1>
-      {isCreating ? (
-        <div className="create-order-modal">
-          <h2>Create New Order</h2>
-          <form>
-            <label>Order ID:</label>
-            <input
-              type="text"
-              name="order_id"
-              value={newOrder.order_id}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label>Customer Name:</label>
-            <input
-              type="text"
-              name="full_name"
-              value={newOrder.full_name}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label>Contact:</label>
-            <input
-              type="text"
-              name="phone_number"
-              value={newOrder.phone_number}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label>Total:</label>
-            <input
-              type="text"
-              name="total"
-              value={newOrder.total}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label>Date:</label>
-            <input
-              type="text"
-              name="date"
-              value={newOrder.date}
-              onChange={handleInputChange}
-            />
-            <br />
-            <label>Status:</label>
-            <input
-              type="text"
-              name="status"
-              value={newOrder.status}
-              onChange={handleInputChange}
-            />
-            <br />
-            <button className="save-button" onClick={handleSaveNewOrder}>
-              Save
-            </button>
-            <button className="cancel-button" onClick={handleCancelCreateOrder}>
-              Cancel
-            </button>
-          </form>
-        </div>
-      ) : (
+     
         <button className="create-order-button" onClick={createOrder}>
           Create New Order
         </button>
-      )}
       <MaterialReactTable table={table} />
     </div>
   );
