@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Form, Input, Select, Button } from 'antd';
+import { Button, Form, Select } from 'antd';
 import axios from 'axios';
+import React, { useState } from 'react';
 
 const { Option } = Select;
 
@@ -86,10 +86,23 @@ export default function CreateOrder() {
       </Form.Item>
       
       <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Create Order
-        </Button>
-      </Form.Item>
+      <Button type="primary" htmlType="submit" style={{
+    backgroundColor: '#000',
+    borderRadius: '8px',
+    width: '120px', 
+    marginRight: '10px' 
+  }}>
+    Create Order
+  </Button>
+  <Button type="default" onClick={() => history.push('/OrderReport')} style={{
+  backgroundColor: '#000',
+  color: '#fff', // add this line to make the text color white
+  borderRadius: '8px',
+  width: '120px'
+}}>
+  Cancel
+</Button>
+</Form.Item>
     </Form>
   );
 }
