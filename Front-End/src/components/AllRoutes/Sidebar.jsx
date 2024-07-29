@@ -67,11 +67,7 @@ const Sidebar = ({ children }) => {
       name: "Promotions",
       icon: <BsCurrencyDollar />
     },
-    {
-      path: "/payment",
-      name: "Payment",
-      icon: <BsCurrencyDollar />
-    },
+
     {
       path: "/rebuy",
       name: "Rebuy",

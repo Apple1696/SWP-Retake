@@ -20,7 +20,7 @@ const Product = () => {
   const [editForm] = Form.useForm();
 
   useEffect(() => {
-    axios.get('https://66a4b40a5dc27a3c19099545.mockapi.io/Item')
+    axios.get('https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products')
       .then(response => {
         setData(response.data);
       })
@@ -104,44 +104,44 @@ const Product = () => {
   const columns = useMemo(
     () => [
       {
-        accessorKey: 'id',
-        header: 'ID',
+        accessorKey: 'productCode',
+        header: 'Code',
         size: 10,
       },
+    
       {
-        accessorKey: 'image',
-        header: 'Image',
-        size: 10,
-        Cell: ({ cell }) => <img src={cell.getValue()} alt="product" style={{ width: '50px', height: '50px' }} />,
-      },
-      {
-        accessorKey: 'name',
+        accessorKey: 'productName',
         header: 'Name',
         size: 15,
       },
       {
-        accessorKey: 'gold_weight',
+        accessorKey: 'category',
+        header: 'Category',
+        size: 15,
+      },
+      {
+        accessorKey: 'weight',
         header: 'Gold weight',
         size: 15,
       },
+      // {
+      //   accessorKey: 'isJewelry',
+      //   header: 'Jewelry',
+      //   size: 15,
+      // },
+      // {
+      //   accessorKey: 'isGold',
+      //   header: 'Gold',
+      //   size: 15,
+      // },
       {
-        accessorKey: 'price',
-        header: 'Price',
+        accessorKey: 'unitPrice',
+        header: 'Unit price',
         size: 15,
       },
       {
-        accessorKey: 'status',
-        header: 'Status',
-        size: 15,
-      },
-      {
-        accessorKey: 'created_at',
-        header: 'Created at',
-        size: 15,
-      },
-      {
-        accessorKey: 'updated_at',
-        header: 'Updated at',
+        accessorKey: 'costPrice',
+        header: 'Cost price ',
         size: 15,
       },
       {

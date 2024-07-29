@@ -1,27 +1,46 @@
 import { Button, Input, Form, Select } from 'antd';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const { Option } = Select;
 
 export default function CreateOrder() {
   const [customers, setCustomers] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [promotions, setPromotions] = useState([]);
   const [counters, setCounters] = useState([]);
   const [orderItems, setOrderItems] = useState([{ id: '', price: '' }]);
 
-  const fetchCustomers = async (query) => {
-    const response = await axios.get(`https://66a4b40a5dc27a3c19099545.mockapi.io/Customer?search=${query}`);
-    setCustomers(response.data);
+  useEffect(() => {
+    if (selectedCustomer) {
+      fetchCustomerById(selectedCustomer);
+    }
+  }, [selectedCustomer]);
+
+  const fetchCustomersByFullName = async (fullName) => {
+    try {
+      const response = await axios.get(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Customers`);
+      const filteredCustomers = response.data.filter(customer =>
+        customer.fullName.toLowerCase().includes(fullName.toLowerCase())
+      );
+      setCustomers(filteredCustomers);
+    } catch (error) {
+      console.error('Error fetching customers by full name:', error);
+      setCustomers([]);
+    }
   };
 
   const handleCustomerSearch = (value) => {
     if (value) {
-      fetchCustomers(value);
+      fetchCustomersByFullName(value);
     } else {
       setCustomers([]);
     }
+  };
+
+  const handleCustomerChange = (value) => {
+    setSelectedCustomer(value);
   };
 
   const fetchPromotions = async (query) => {
@@ -50,32 +69,30 @@ export default function CreateOrder() {
   };
 
   const { cancelOrder } = handleRedirect();
+
   return (
     <>
       <Form layout="vertical">
-        <Form.Item label="Order Type" name="orderType" rules={[{ required: true, message: 'Please select an order type!' }]}>
-          <Select placeholder="Select order type">
-            <Option value="rebuy">Rebuy</Option>
-            <Option value="sell">Sell</Option>
-          </Select>
-        </Form.Item>
+        
 
         <Form.Item label="Customer" name="customer" rules={[{ required: true, message: 'Please select a customer!' }]}>
           <Select
             showSearch
             placeholder="Search customer"
             onSearch={handleCustomerSearch}
+            onChange={handleCustomerChange}
             filterOption={false}
+            value={selectedCustomer}
           >
             {customers.map(customer => (
-              <Option key={customer.id} value={customer.name}>
-                {customer.name}
+              <Option key={customer.id} value={customer.id}>
+                {customer.fullName}
               </Option>
             ))}
           </Select>
         </Form.Item>
 
-        <Form.Item label="Promotion" name="promotion">
+        {/* <Form.Item label="Promotion" name="promotion">
           <Select
             showSearch
             placeholder="Search promotion"
@@ -88,9 +105,9 @@ export default function CreateOrder() {
               </Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
 
-        <Form.Item label="Counter" name="counter">
+        {/* <Form.Item label="Counter" name="counter">
           <Select
             showSearch
             placeholder="Search counter"
@@ -103,7 +120,7 @@ export default function CreateOrder() {
               </Option>
             ))}
           </Select>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
 
       <Form layout="vertical">
