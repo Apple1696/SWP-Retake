@@ -1,19 +1,22 @@
-import React, { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import  { useState } from 'react';
 import './Login.css';
 import { Helmet } from 'react-helmet';
 import UserService from '../services/UserService';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = await UserService.login(email, password);
       if (token) {
-        localStorage.setItem('token', token); // Store the token in localStorage or any other storage
+        localStorage.setItem('token', token);
         window.location.href = '/dashboard';
       }
     } catch (error) {
@@ -25,6 +28,10 @@ const Login = () => {
   const handleReset = () => {
     setEmail('');
     setPassword('');
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   return (
@@ -50,7 +57,7 @@ const Login = () => {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="alex@gmail.com"
+                  placeholder="Enter your email address"
                 />
                 <span className="input-group-text">@</span>
               </div>
@@ -59,14 +66,20 @@ const Login = () => {
               <label htmlFor="password">Password</label>
               <div className="input-group">
                 <input
-                  type="password"
+                  type={passwordVisible ? 'text' : 'password'} // Toggle input type based on state
                   className="form-control"
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
                 />
-                <span className="input-group-text">🔒</span>
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary"
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle eye icon */}
+                </button>
               </div>
             </div>
             <button type="submit" className="btn btn-primary btn-block">Login</button>
