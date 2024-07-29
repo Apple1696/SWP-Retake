@@ -50,7 +50,7 @@ const OrderReport = () => {
   };
 
   const handlePaymentClick = (row) => {
-    console.log('Payment button clicked for:', row);
+   navigate('/payment/${orderNumber}');
   };
 
   const columns = useMemo(
