@@ -8,9 +8,9 @@ const { Option } = Select;
 export default function CreateOrder() {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [promotions, setPromotions] = useState([]);
-  const [counters, setCounters] = useState([]);
-  const [orderItems, setOrderItems] = useState([{ id: '', price: '' }]);
+  const [products, setProducts] = useState([]);
+  const [orderItems, setOrderItems] = useState([{ productCode: '', unitPrice: '' }]);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (selectedCustomer) {
@@ -43,29 +43,25 @@ export default function CreateOrder() {
     setSelectedCustomer(value);
   };
 
-  const fetchPromotions = async (query) => {
-    // Fetch promotions from the API
-  };
-
-  const fetchCounters = async (query) => {
-    // Fetch counters from the API
-  };
-
-  const handleItemSearch = async (value, index) => {
+  const handleProductSearch = async (value, index) => {
     if (value) {
-      const response = await axios.get(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item?search=${value}`);
-      const item = response.data[0];
-      if (item) {
-        const newOrderItems = [...orderItems];
-        newOrderItems[index].id = item.id;
-        newOrderItems[index].price = item.price;
-        setOrderItems(newOrderItems);
+      try {
+        const response = await axios.get(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products?search=${value}`);
+        const product = response.data[0];
+        if (product) {
+          const newOrderItems = [...orderItems];
+          newOrderItems[index].productCode = product.productCode;
+          newOrderItems[index].unitPrice = product.unitPrice;
+          setOrderItems(newOrderItems);
+        }
+      } catch (error) {
+        console.error('Error fetching product by code:', error);
       }
     }
   };
 
   const addOrderItem = () => {
-    setOrderItems([...orderItems, { id: '', price: '' }]);
+    setOrderItems([...orderItems, { productCode: '', unitPrice: '' }]);
   };
 
   const removeOrderItem = (index) => {
@@ -74,143 +70,142 @@ export default function CreateOrder() {
     setOrderItems(newOrderItems);
   };
 
+  const handleSubmit = async (values) => {
+    const newOrder = {
+      customerId: selectedCustomer,
+      orderItems: orderItems.map(item => ({
+        productCode: item.productCode,
+        unitPrice: item.unitPrice,
+      })),
+      // Add any other necessary fields here
+    };
+    try {
+      await axios.post('https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Orders', newOrder);
+      // Handle successful order creation, e.g., show a notification, reset form, etc.
+      form.resetFields();
+      setOrderItems([{ productCode: '', unitPrice: '' }]);
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+  };
+
   const { cancelOrder } = handleRedirect();
 
   return (
     <>
-      <Form layout="vertical">
-        
-
-        <Form.Item label="Customer" name="customer" rules={[{ required: true, message: 'Please select a customer!' }]}>
+      <h3>Create Order</h3>
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
+        <Form.Item label="Customer Full Name" name="fullName" >
           <Select
             showSearch
-            placeholder="Search customer"
+            placeholder="Search customer full name"
             onSearch={handleCustomerSearch}
             onChange={handleCustomerChange}
             filterOption={false}
-
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '5px',
+              borderColor: '#ccc',
+              height: '40px',
+              fontSize: '16px'
+            }}
           >
             {customers.map(customer => (
-              <Option key={customer.id} value={customer.id}>
-                {customer.fullName}
-              </Option>
+              <Option key={customer.id} value={customer.id}>{customer.fullName}</Option>
             ))}
           </Select>
         </Form.Item>
 
-        {/* <Form.Item label="Promotion" name="promotion">
-          <Select
-            showSearch
-            placeholder="Search promotion"
-            onSearch={fetchPromotions}
-            filterOption={false}
-          >
-            {promotions.map(promotion => (
-              <Option key={promotion.id} value={promotion.name}>
-                {promotion.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item> */}
-
-        {/* <Form.Item label="Counter" name="counter">
-          <Select
-            showSearch
-            placeholder="Search counter"
-            onSearch={fetchCounters}
-            filterOption={false}
-          >
-            {counters.map(counter => (
-              <Option key={counter.id} value={counter.name}>
-                {counter.name}
-              </Option>
-            ))}
-          </Select>
-        </Form.Item> */}
+        <div>
+          <h3>Order Items</h3>
+          {orderItems.map((item, index) => (
+            <div key={index} style={{
+              padding: '20px',
+              backgroundColor: '#fff',
+              borderRadius: '10px',
+              boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+              marginBottom: '20px'
+            }}>
+              <h4 style={{
+                marginBottom: '10px',
+                fontSize: '16px',
+                fontWeight: 'bold'
+              }}>Item {index + 1}</h4>
+              <Form.Item label="Product Code" name={`productCode_${index}`} rules={[{ required: true, message: 'Please enter a product code!' }]}>
+                <Select
+                  showSearch
+                  placeholder="Search product code"
+                  onSearch={(value) => handleProductSearch(value, index)}
+                  filterOption={false}
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    borderColor: '#ccc',
+                    height: '40px',
+                    fontSize: '16px'
+                  }}
+                >
+                  <Option value={item.productCode}>{item.productCode}</Option>
+                </Select>
+              </Form.Item>
+              <Form.Item label="Unit Price" name={`unitPrice_${index}`}>
+                <Input
+                  value={item.unitPrice}
+                  readOnly
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    borderColor: '#ccc',
+                    height: '40px',
+                    fontSize: '16px'
+                  }}
+                />
+              </Form.Item>
+              <Button type="danger" onClick={() => removeOrderItem(index)} style={{
+                width: '100%',
+                backgroundColor: '#f5222d',
+                color: '#fff',
+                borderRadius: '8px',
+                fontWeight: 'bold'
+              }}>
+                Remove
+              </Button>
+            </div>
+          ))}
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button type="primary" onClick={addOrderItem} style={{
+              width: '30%',
+              backgroundColor: '#000',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold'
+            }}>
+              Add another
+            </Button>
+            <Button type="primary" htmlType="submit" style={{
+              width: '30%',
+              backgroundColor: '#000',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold'
+            }}>
+              Create Order
+            </Button>
+            <Button type="primary" onClick={cancelOrder} style={{
+              width: '30%',
+              backgroundColor: '#000',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold'
+            }}>
+              Cancel
+            </Button>
+          </div>
+        </div>
       </Form>
-
-      <Form layout="vertical">
-  <div>
-    <h3>Order Items</h3>
-    {orderItems.map((item, index) => (
-      <div key={index} style={{
-        padding: '20px',
-        backgroundColor: '#fff',
-        borderRadius: '10px',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-        marginBottom: '20px'
-      }}>
-        <h4 style={{
-          marginBottom: '10px',
-          fontSize: '16px',
-          fontWeight: 'bold'
-        }}>Item {index + 1}</h4>
-        <Form.Item label="Item ID" name={`itemId_${index}`} rules={[{ required: true, message: 'Please enter an item ID!' }]}>
-          <Select
-            showSearch
-            placeholder="Search item ID"
-            onSearch={(value) => handleItemSearch(value, index)}
-            filterOption={false}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '5px',
-              borderColor: '#ccc',
-              height: '40px',
-              fontSize: '16px'
-            }}
-          >
-            <Option value={item.id}>{item.id}</Option>
-          </Select>
-        </Form.Item>
-        <Form.Item label="Unit Price" name={`unitPrice_${index}`}>
-          <Input
-            value={item.price}
-            readOnly
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '5px',
-              borderColor: '#ccc',
-              height: '40px',
-              fontSize: '16px'
-            }}
-          />
-        </Form.Item>
-      </div>
-    ))}
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <Button type="primary" onClick={addOrderItem} style={{
-        width: '30%',
-        backgroundColor: '#000',
-        color: '#fff',
-        borderRadius: '8px',
-        fontWeight: 'bold'
-      }}>
-        Add another
-      </Button>
-      <Button type="primary" htmlType="submit" style={{
-        width: '30%',
-        backgroundColor: '#000',
-        color: '#fff',
-        borderRadius: '8px',
-        fontWeight: 'bold'
-      }}>
-        Create Order
-      </Button>
-      <Button type="primary" onClick={cancelOrder} style={{
-        width: '30%',
-        backgroundColor: '#000',
-        color: '#fff',
-        borderRadius: '8px',
-        fontWeight: 'bold'
-      }}>
-        Cancel
-      </Button>
-    </div>
-  </div>
-</Form>
-
     </>
   );
 }
