@@ -1,4 +1,4 @@
-import { Button, Input, Form, Select } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import handleRedirect from './../../HandleFunction/handleRedirect';
@@ -68,6 +68,12 @@ export default function CreateOrder() {
     setOrderItems([...orderItems, { id: '', price: '' }]);
   };
 
+  const removeOrderItem = (index) => {
+    const newOrderItems = [...orderItems];
+    newOrderItems.splice(index, 1);
+    setOrderItems(newOrderItems);
+  };
+
   const { cancelOrder } = handleRedirect();
 
   return (
@@ -82,7 +88,7 @@ export default function CreateOrder() {
             onSearch={handleCustomerSearch}
             onChange={handleCustomerChange}
             filterOption={false}
-            value={selectedCustomer}
+
           >
             {customers.map(customer => (
               <Option key={customer.id} value={customer.id}>
@@ -124,39 +130,87 @@ export default function CreateOrder() {
       </Form>
 
       <Form layout="vertical">
-        <div>
-          <h3>Order Items</h3>
-          {orderItems.map((item, index) => (
-            <div key={index}>
-              <Form.Item label="Item ID" name={`itemId_${index}`} rules={[{ required: true, message: 'Please enter an item ID!' }]}>
-                <Select
-                  showSearch
-                  placeholder="Search item ID"
-                  onSearch={(value) => handleItemSearch(value, index)}
-                  filterOption={false}
-                >
-                  <Option value={item.id}>{item.id}</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item label="Unit Price" name={`unitPrice_${index}`}>
-                <Input value={item.price} readOnly />
-              </Form.Item>
-            </div>
-          ))}
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button type="primary" onClick={addOrderItem} style={{ width: '50%' }}>
-              Add another
-            </Button>
-            <Button type="primary" htmlType="submit" style={{ width: '50%', marginLeft: '10px' }}>
-              Create Order
-            </Button>
-          </div>
-        </div>
-      </Form>
-      <br />
-      <Button type="primary" onClick={cancelOrder} style={{ width: '50%' }}>
+  <div>
+    <h3>Order Items</h3>
+    {orderItems.map((item, index) => (
+      <div key={index} style={{
+        padding: '20px',
+        backgroundColor: '#fff',
+        borderRadius: '10px',
+        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+        marginBottom: '20px'
+      }}>
+        <h4 style={{
+          marginBottom: '10px',
+          fontSize: '16px',
+          fontWeight: 'bold'
+        }}>Item {index + 1}</h4>
+        <Form.Item label="Item ID" name={`itemId_${index}`} rules={[{ required: true, message: 'Please enter an item ID!' }]}>
+          <Select
+            showSearch
+            placeholder="Search item ID"
+            onSearch={(value) => handleItemSearch(value, index)}
+            filterOption={false}
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '5px',
+              borderColor: '#ccc',
+              height: '40px',
+              fontSize: '16px'
+            }}
+          >
+            <Option value={item.id}>{item.id}</Option>
+          </Select>
+        </Form.Item>
+        <Form.Item label="Unit Price" name={`unitPrice_${index}`}>
+          <Input
+            value={item.price}
+            readOnly
+            style={{
+              width: '100%',
+              padding: '10px',
+              borderRadius: '5px',
+              borderColor: '#ccc',
+              height: '40px',
+              fontSize: '16px'
+            }}
+          />
+        </Form.Item>
+      </div>
+    ))}
+    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Button type="primary" onClick={addOrderItem} style={{
+        width: '30%',
+        backgroundColor: '#000',
+        color: '#fff',
+        borderRadius: '8px',
+        fontWeight: 'bold'
+      }}>
+        Add another
+      </Button>
+      <Button type="primary" htmlType="submit" style={{
+        width: '30%',
+        backgroundColor: '#000',
+        color: '#fff',
+        borderRadius: '8px',
+        fontWeight: 'bold'
+      }}>
+        Create Order
+      </Button>
+      <Button type="primary" onClick={cancelOrder} style={{
+        width: '30%',
+        backgroundColor: '#000',
+        color: '#fff',
+        borderRadius: '8px',
+        fontWeight: 'bold'
+      }}>
         Cancel
       </Button>
+    </div>
+  </div>
+</Form>
+
     </>
   );
 }
