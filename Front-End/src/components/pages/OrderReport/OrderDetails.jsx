@@ -1,7 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Col, Row, Typography, List, Button, notification } from 'antd';
+import OrderService from './../../../services/OrderService';
 
 const { Title, Text } = Typography;
 
@@ -11,7 +11,7 @@ const OrderDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Orders?orderNumber=${orderNumber}`)
+    OrderService.getOrderDetails(orderNumber)
       .then((response) => {
         if (response.data.length > 0) {
           setOrder(response.data[0]);
@@ -26,23 +26,7 @@ const OrderDetails = () => {
     navigate('/order-report'); // Navigate back to OrderReport page
   };
 
-//   const handleDelete = () => {
-//     axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Orders?orderNumber=${orderNumber}`)
-//       .then(() => {
-//         notification.success({
-//           message: 'Success',
-//           description: 'Order deleted successfully',
-//         });
-//         navigate('/'); // Navigate back to OrderReport page after deletion
-//       })
-//       .catch((error) => {
-//         console.error('Error deleting order: ', error);
-//         notification.error({
-//           message: 'Error',
-//           description: 'Failed to delete order',
-//         });
-//       });
-//   };
+ 
 
   if (!order) return <p>Loading...</p>;
 
@@ -78,9 +62,7 @@ const OrderDetails = () => {
         <Button type="primary" onClick={handleCancel} style={{ marginRight: '10px' }}>
           Cancel
         </Button>
-        {/* <Button type="danger" onClick={handleDelete}>
-          Delete
-        </Button> */}
+        
       </Card>
     </div>
   );
