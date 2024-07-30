@@ -22,6 +22,12 @@ const OrderReport = () => {
           orderItems: order.orderItems.map(item => ({
             ...item,
             orderId: order.orderId,
+            orderNumber: order.orderNumber,
+            customerName: order.customerName,
+            totalAmount: order.totalAmount,
+            finalAmount: order.finalAmount,
+            paymentMethod: order.paymentMethod,
+            status: order.status
           }))
         }));
 
@@ -29,12 +35,16 @@ const OrderReport = () => {
           order.orderItems.map(item => ({
             orderId: order.orderId,
             orderNumber: order.orderNumber,
-            customerId: order.customerId,
+            customerName: order.customerName,
             totalAmount: order.totalAmount,
             finalAmount: order.finalAmount,
             paymentMethod: order.paymentMethod,
             status: order.status,
             productId: item.productId,
+            productName: item.productName,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            finalPrice: item.finalPrice
           }))
         );
 
@@ -49,8 +59,8 @@ const OrderReport = () => {
     navigate(`/order-details/${orderNumber}`); // Redirect to OrderDetails page
   };
 
-  const handlePaymentClick = (row) => {
-   navigate('/payment/${orderNumber}');
+  const handlePaymentClick = (orderId) => {
+    navigate(`/payment/${orderId}`);
   };
 
   const columns = useMemo(
@@ -69,9 +79,9 @@ const OrderReport = () => {
         ),
       },
       {
-        accessorKey: 'customerId',
-        header: 'Customer ID',
-        size: 100,
+        accessorKey: 'customerName',
+        header: 'Customer Name',
+        size: 150, // Adjust size as needed
       },
       {
         accessorKey: 'totalAmount',
@@ -101,7 +111,7 @@ const OrderReport = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => handlePaymentClick(row.original)}
+            onClick={() => handlePaymentClick(row.original.orderId)}
           >
             Payment
           </Button>

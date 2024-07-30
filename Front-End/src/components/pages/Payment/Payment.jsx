@@ -26,23 +26,24 @@ export default function Payment() {
     navigate('/order-report'); // Navigate back to OrderReport page
   };
 
-//   const handleDelete = () => {
-//     axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Orders?orderNumber=${orderNumber}`)
-//       .then(() => {
-//         notification.success({
-//           message: 'Success',
-//           description: 'Order deleted successfully',
-//         });
-//         navigate('/'); // Navigate back to OrderReport page after deletion
-//       })
-//       .catch((error) => {
-//         console.error('Error deleting order: ', error);
-//         notification.error({
-//           message: 'Error',
-//           description: 'Failed to delete order',
-//         });
-//       });
-//   };
+  // Uncomment if you want to use the delete functionality
+  // const handleDelete = () => {
+  //   axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Orders?orderNumber=${orderNumber}`)
+  //     .then(() => {
+  //       notification.success({
+  //         message: 'Success',
+  //         description: 'Order deleted successfully',
+  //       });
+  //       navigate('/'); // Navigate back to OrderReport page after deletion
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error deleting order: ', error);
+  //       notification.error({
+  //         message: 'Error',
+  //         description: 'Failed to delete order',
+  //       });
+  //     });
+  // };
 
   if (!order) return <p>Loading...</p>;
 
@@ -53,7 +54,7 @@ export default function Payment() {
           <Col span={12}>
             <Title level={4}>Order Information</Title>
             <Text strong>Order Number:</Text> {order.orderNumber}<br />
-            <Text strong>Customer ID:</Text> {order.customerId}<br />
+            <Text strong>Customer Name:</Text> {order.customerName}<br />
             <Text strong>Total Amount:</Text> ${order.totalAmount}<br />
             <Text strong>Final Amount:</Text> ${order.finalAmount}<br />
             <Text strong>Payment Method:</Text> {order.paymentMethod}<br />
@@ -66,7 +67,7 @@ export default function Payment() {
               dataSource={order.orderItems}
               renderItem={item => (
                 <List.Item>
-                  <Text strong>Product ID:</Text> {item.productId} <br />
+                  <Text strong>Product Name:</Text> {item.productName} <br />
                   <Text strong>Quantity:</Text> {item.quantity} <br />
                   <Text strong>Unit Price:</Text> ${item.unitPrice} <br />
                   <Text strong>Final Price:</Text> ${item.finalPrice}
@@ -83,8 +84,7 @@ export default function Payment() {
         </Button> */}
       </Card>
       <br/>
-          <h3>Payment info</h3>
-
+      <h3>Payment info</h3>
     </div>
   );
 }
