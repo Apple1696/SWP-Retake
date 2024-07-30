@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { FaPlus, FaMinus } from "react-icons/fa";
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const { Option } = Select;
@@ -123,13 +123,12 @@ export default function CreateOrder() {
             <h3 style={{ marginRight: '10px' }}>Order Items</h3>
             <Button type="primary" onClick={addOrderItem} style={{
               backgroundColor: '#00ff00',
-              color: '#fff',
               borderRadius: '8px',
               fontWeight: 'bold',
               border: 'none',
               padding: '10px 20px'
             }}>
-              <AiOutlinePlus style={{ marginRight: '5px' }} />
+              <FaPlus  style={{ marginRight: '5px' }} />
             </Button>
           </div>
           {orderItems.map((item, index) => (
@@ -154,7 +153,7 @@ export default function CreateOrder() {
                   border: 'none',
                   padding: '10px 20px'
                 }}>
-                  <AiOutlineMinus style={{ marginRight: '5px' }} />
+                  <FaMinus  style={{ marginRight: '5px' }} />
                 </Button>
               </div>
               <Form.Item label="Product Code" name={`productCode_${index}`} rules={[{ required: true, message: 'Please enter a product code!' }]}>
