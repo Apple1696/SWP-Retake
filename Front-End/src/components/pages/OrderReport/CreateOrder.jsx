@@ -1,7 +1,7 @@
 import { Button, Form, Input, Select } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FaPlus, FaMinus } from "react-icons/fa";
+import { FaMinus, FaPlus } from "react-icons/fa";
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const { Option } = Select;
@@ -96,27 +96,52 @@ export default function CreateOrder() {
     <>
       <h3>Create Order</h3>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item label="Customer Full Name" name="fullName" >
-          <Select
-            showSearch
-            placeholder="Search customer full name"
-            onSearch={handleCustomerSearch}
-            onChange={handleCustomerChange}
-            filterOption={false}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '5px',
-              borderColor: '#ccc',
-              height: '40px',
-              fontSize: '16px'
-            }}
-          >
-            {customers.map(customer => (
-              <Option key={customer.id} value={customer.id}>{customer.fullName}</Option>
-            ))}
-          </Select>
-        </Form.Item>
+      <Form.Item>
+  <span style={{ marginRight: 10 }}>Customer Full Name :</span>
+  <span style={{ borderBottom: '1px solid #ccc', paddingBottom: 5 }}>
+    <Select
+      showSearch
+      placeholder="Search customer full name"
+      onSearch={handleCustomerSearch}
+      onChange={handleCustomerChange}
+      filterOption={false}
+      style={{
+        border: 'none',
+        boxShadow: 'none',
+        padding: 0,
+        fontSize: '16px',
+        width: 'calc(100% - 150px)'
+      }}
+      suffix={<span style={{ fontSize: 16 }}>&#9660;</span>}
+      dropdownStyle={{
+        borderBottom: '1px solid #ccc',
+        padding: '5px',
+        fontSize: '16px'
+      }}
+    >
+      {customers.map(customer => (
+        <Option key={customer.id} value={customer.id}>{customer.fullName}</Option>
+      ))}
+    </Select>
+  </span>
+  <style>
+    {`
+     .ant-select-selector {
+        border: none!important;
+        padding: 0!important;
+        background: transparent!important;
+      }
+     .ant-select-selector:hover {
+        border: none!important;
+        background: transparent!important;
+      }
+     .ant-select-focused {
+        border: none!important;
+        box-shadow: none!important;
+      }
+    `}
+  </style>
+</Form.Item>
 
         <div>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
