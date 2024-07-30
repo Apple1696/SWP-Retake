@@ -1,6 +1,7 @@
 import { Button, Form, Input, Select } from 'antd';
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
 import handleRedirect from './../../HandleFunction/handleRedirect';
 
 const { Option } = Select;
@@ -118,7 +119,19 @@ export default function CreateOrder() {
         </Form.Item>
 
         <div>
-          <h3>Order Items</h3>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ marginRight: '10px' }}>Order Items</h3>
+            <Button type="primary" onClick={addOrderItem} style={{
+              backgroundColor: '#00ff00',
+              color: '#fff',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              border: 'none',
+              padding: '10px 20px'
+            }}>
+              <AiOutlinePlus style={{ marginRight: '5px' }} />
+            </Button>
+          </div>
           {orderItems.map((item, index) => (
             <div key={index} style={{
               padding: '20px',
@@ -127,11 +140,23 @@ export default function CreateOrder() {
               boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
               marginBottom: '20px'
             }}>
-              <h4 style={{
-                marginBottom: '10px',
-                fontSize: '16px',
-                fontWeight: 'bold'
-              }}>Item {index + 1}</h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h4 style={{
+                  marginBottom: '10px',
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+                }}>Item {index + 1}</h4>
+                <Button type="danger" onClick={() => removeOrderItem(index)} style={{
+                  backgroundColor: '#f5222d',
+                  color: '#fff',
+                  borderRadius: '8px',
+                  fontWeight: 'bold',
+                  border: 'none',
+                  padding: '10px 20px'
+                }}>
+                  <AiOutlineMinus style={{ marginRight: '5px' }} />
+                </Button>
+              </div>
               <Form.Item label="Product Code" name={`productCode_${index}`} rules={[{ required: true, message: 'Please enter a product code!' }]}>
                 <Select
                   showSearch
@@ -144,7 +169,8 @@ export default function CreateOrder() {
                     borderRadius: '5px',
                     borderColor: '#ccc',
                     height: '40px',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
                   }}
                 >
                   <Option value={item.productCode}>{item.productCode}</Option>
@@ -160,46 +186,31 @@ export default function CreateOrder() {
                     borderRadius: '5px',
                     borderColor: '#ccc',
                     height: '40px',
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
                   }}
                 />
               </Form.Item>
-              <Button type="danger" onClick={() => removeOrderItem(index)} style={{
-                width: '100%',
-                backgroundColor: '#f5222d',
-                color: '#fff',
-                borderRadius: '8px',
-                fontWeight: 'bold'
-              }}>
-                Remove
-              </Button>
             </div>
           ))}
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button type="primary" onClick={addOrderItem} style={{
-              width: '30%',
-              backgroundColor: '#000',
-              color: '#fff',
-              borderRadius: '8px',
-              fontWeight: 'bold'
-            }}>
-              Add another
-            </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
             <Button type="primary" htmlType="submit" style={{
-              width: '30%',
+              width: '120px',
               backgroundColor: '#000',
               color: '#fff',
               borderRadius: '8px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              marginRight: '10px'
             }}>
               Create Order
             </Button>
             <Button type="primary" onClick={cancelOrder} style={{
-              width: '30%',
+              width: '120px',
               backgroundColor: '#000',
               color: '#fff',
               borderRadius: '8px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              marginRight: '10px'
             }}>
               Cancel
             </Button>
