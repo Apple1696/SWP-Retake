@@ -2,16 +2,13 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { MaterialReactTable } from 'material-react-table';
 import { Button, Stack, IconButton } from '@mui/material';
 import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Modal, Form, Input, Select, Upload, notification } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Modal, Form, Input, Select, notification } from 'antd';
 import axios from 'axios';
-
-import handleRedirect from './../../HandleFunction/handleRedirect';
+import { Row, Col } from 'antd'; // Import Row and Col from Ant Design
 
 const { Option } = Select;
 
 const Product = () => {
-  const { addProduct } = handleRedirect();
   const [data, setData] = useState([]);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
@@ -31,75 +28,62 @@ const Product = () => {
 
   const handleEdit = (row) => {
     setCurrentRow(row.original);
-    editForm.setFieldsValue({
-      price: row.original.price,
-      quantity: row.original.quantity,
-    });
+    editForm.setFieldsValue(row.original);
     setIsEditModalVisible(true);
   };
 
   const handleDelete = (row) => {
     setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
-    axios.delete(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item/${row.original.id}`)
+    axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${row.original.id}`)
       .then(response => {
-        console.log('Item deleted:', response.data);
-        notification.success({ message: 'Customer deleted successfully' });
-
+        console.log('Product deleted:', response.data);
+        notification.success({ message: 'Product deleted successfully' });
       })
       .catch(error => {
-        console.error('Error deleting item:', error);
-        notification.error({ message: 'Failed to delete customer' });
-
+        console.error('Error deleting product:', error);
+        notification.error({ message: 'Failed to delete product' });
       });
   };
-
+  
   const handleAddProduct = () => {
     setIsAddModalVisible(true);
   };
 
   const handleAddSubmit = (values) => {
-    const formData = new FormData();
-    formData.append('category', values.category);
-    formData.append('name', values.name);
-    formData.append('gold_weight', values.gold_weight);
-    formData.append('price', values.price);
-    formData.append('status', values.status);
-    formData.append('image', values.image[0]?.originFileObj);
-
-    axios.post('https://66a4b40a5dc27a3c19099545.mockapi.io/Item', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    axios.post('https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products', values)
       .then(response => {
         setData((prevData) => [...prevData, response.data]);
-        console.log('Item added:', response.data);
+        notification.success({ message: 'Product added successfully' });
       })
       .catch(error => {
-        console.error('Error adding item:', error);
+        console.error('Error adding product:', error);
+        notification.error({ message: 'Failed to add product' });
       });
-
+  
     setIsAddModalVisible(false);
     form.resetFields();
   };
+  
 
   const handleEditSubmit = (values) => {
     const updatedRow = { ...currentRow, ...values };
-    axios.put(`https://66a4b40a5dc27a3c19099545.mockapi.io/Item/${currentRow.id}`, updatedRow)
+    axios.put(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${currentRow.id}`, updatedRow)
       .then(response => {
         setData((prevData) =>
           prevData.map((item) =>
             item.id === updatedRow.id ? { ...item, ...updatedRow } : item
           )
         );
-        console.log('Item updated:', response.data);
+        notification.success({ message: 'Product updated successfully' });
       })
       .catch(error => {
-        console.error('Error updating item:', error);
+        console.error('Error updating product:', error);
+        notification.error({ message: 'Failed to update product' });
       });
-
+  
     setIsEditModalVisible(false);
   };
+  
 
   const columns = useMemo(
     () => [
@@ -108,7 +92,6 @@ const Product = () => {
         header: 'Code',
         size: 10,
       },
-    
       {
         accessorKey: 'productName',
         header: 'Name',
@@ -124,16 +107,6 @@ const Product = () => {
         header: 'Gold weight',
         size: 15,
       },
-      // {
-      //   accessorKey: 'isJewelry',
-      //   header: 'Jewelry',
-      //   size: 15,
-      // },
-      // {
-      //   accessorKey: 'isGold',
-      //   header: 'Gold',
-      //   size: 15,
-      // },
       {
         accessorKey: 'unitPrice',
         header: 'Unit price',
@@ -141,8 +114,20 @@ const Product = () => {
       },
       {
         accessorKey: 'costPrice',
-        header: 'Cost price ',
+        header: 'Cost price',
         size: 15,
+      },
+      {
+        accessorKey: 'isJewelry',
+        header: 'Jewelry',
+        size: 15,
+        Cell: ({ value }) => (value ? 'Yes' : 'No'),
+      },
+      {
+        accessorKey: 'isGold',
+        header: 'Gold',
+        size: 15,
+        Cell: ({ value }) => (value ? 'Yes' : 'No'),
       },
       {
         accessorKey: 'action',
@@ -178,114 +163,249 @@ const Product = () => {
         <MaterialReactTable columns={columns} data={data} />
       </div>
 
-      <Modal
-        title="Edit Item"
-        visible={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
-        onOk={() => editForm.submit()}
-        style={{ backgroundColor: '#f0f0f0' }}
-      >
-        <Form
-          form={editForm}
-          layout="vertical"
-          onFinish={handleEditSubmit}
-          initialValues={currentRow}
-          style={{ backgroundColor: 'white', padding: '20px' }}
-        >
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Name required' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="gold_weight"
-            label="Gold weight"
-            rules={[{ required: true, message: 'Gold weight required' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
 
       <Modal
-        title="Add Product"
-        visible={isAddModalVisible}
-        onCancel={() => setIsAddModalVisible(false)}
-        onOk={() => form.submit()}
-        style={{ backgroundColor: '#f0f0f0' }}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleAddSubmit}
-          style={{ backgroundColor: 'white', padding: '20px' }}
+  title="Edit Product"
+  visible={isEditModalVisible}
+  onCancel={() => setIsEditModalVisible(false)}
+  onOk={() => editForm.submit()}
+  style={{ backgroundColor: '#f0f0f0' }}
+  width={800}
+>
+  <Form
+    form={editForm}
+    layout="vertical"
+    onFinish={handleEditSubmit}
+    initialValues={currentRow}
+    style={{ backgroundColor: 'white', padding: '20px' }}
+  >
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="productCode"
+          label="Product Code"
+          rules={[{ required: true, message: 'Product Code required' }]}
         >
-          <Form.Item
-            name="category"
-            label="Select product type"
-            rules={[{ required: true, message: 'Please select a product type!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Select placeholder="Select a product type" style={{ width: '100%' }}>
-              <Option value="Necklace">Necklace</Option>
-              <Option value="Bracelet">Bracelet</Option>
-              <Option value="Ring">Ring</Option>
-              <Option value="Earrings">Earrings</Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="name"
-            label="Jewelry name"
-            rules={[{ required: true, message: 'Please input the product title!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Input style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item
-            name="gold_weight"
-            label="Gold Weight"
-            rules={[{ required: true, message: 'Please input the gold weight!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Input type="number" style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item
-            name="price"
-            label="Price per item"
-            rules={[{ required: true, message: 'Please input the price per item!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Input type="number" style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true, message: 'Please input the status!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Input style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item
-            name="image"
-            label="Image Upload"
-            valuePropName="fileList"
-            getValueFromEvent={(e) => e.fileList}
-            rules={[{ required: true, message: 'Please upload an image!' }]}
-            style={{ marginBottom: '10px' }}
-          >
-            <Upload
-              name="image"
-              listType="picture"
-              beforeUpload={() => false}
-              style={{ width: '100%' }}
-            >
-              <Button icon={<UploadOutlined />} style={{ width: '100%' }}>Click to Upload</Button>
-            </Upload>
-          </Form.Item>
-        </Form>
-      </Modal>
+          <Input />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="productName"
+          label="Product Name"
+          rules={[{ required: true, message: 'Product Name required' }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="category"
+          label="Category"
+          rules={[{ required: true, message: 'Category required' }]}
+        >
+          <Select placeholder="Select a category">
+            <Select.Option value="Rings">Rings</Select.Option>
+            <Select.Option value="Earrings">Earrings</Select.Option>
+            <Select.Option value="Necklaces">Necklaces</Select.Option>
+            <Select.Option value="Bracelets">Bracelets</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="unitPrice"
+          label="Unit Price"
+          rules={[{ required: true, message: 'Unit Price required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="costPrice"
+          label="Cost Price"
+          rules={[{ required: true, message: 'Cost Price required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="weight"
+          label="Gold Weight"
+          rules={[{ required: true, message: 'Gold Weight required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="isJewelry"
+          label="Is Jewelry"
+          rules={[{ required: true, message: 'Is Jewelry required' }]}
+        >
+          <Select>
+            <Select.Option value={true}>True</Select.Option>
+            <Select.Option value={false}>False</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="isGold"
+          label="Is Gold"
+          rules={[{ required: true, message: 'Is Gold required' }]}
+        >
+          <Select>
+            <Select.Option value={true}>True</Select.Option>
+            <Select.Option value={false}>False</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={24}>
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[{ required: true, message: 'Description required' }]}
+        >
+          <Input.TextArea rows={4} />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+</Modal>
+
+
+
+<Modal
+  title="Add Product"
+  visible={isAddModalVisible}
+  onCancel={() => setIsAddModalVisible(false)}
+  onOk={() => form.submit()}
+  style={{ backgroundColor: '#f0f0f0' }}
+  width={800}
+>
+  <Form
+    form={form}
+    layout="vertical"
+    onFinish={handleAddSubmit}
+    style={{ backgroundColor: 'white', padding: '20px' }}
+  >
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="productCode"
+          label="Product Code"
+          rules={[{ required: true, message: 'Product Code required' }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="productName"
+          label="Product Name"
+          rules={[{ required: true, message: 'Product Name required' }]}
+        >
+          <Input />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="category"
+          label="Category"
+          rules={[{ required: true, message: 'Category required' }]}
+        >
+          <Select placeholder="Select a category">
+            <Select.Option value="Rings">Rings</Select.Option>
+            <Select.Option value="Earrings">Earrings</Select.Option>
+            <Select.Option value="Necklaces">Necklaces</Select.Option>
+            <Select.Option value="Bracelets">Bracelets</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="unitPrice"
+          label="Unit Price"
+          rules={[{ required: true, message: 'Unit Price required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="costPrice"
+          label="Cost Price"
+          rules={[{ required: true, message: 'Cost Price required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="weight"
+          label="Gold Weight"
+          rules={[{ required: true, message: 'Gold Weight required' }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={12}>
+        <Form.Item
+          name="isJewelry"
+          label="Is Jewelry"
+          rules={[{ required: true, message: 'Is Jewelry required' }]}
+        >
+          <Select>
+            <Select.Option value={true}>True</Select.Option>
+            <Select.Option value={false}>False</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+      <Col span={12}>
+        <Form.Item
+          name="isGold"
+          label="Is Gold"
+          rules={[{ required: true, message: 'Is Gold required' }]}
+        >
+          <Select>
+            <Select.Option value={true}>True</Select.Option>
+            <Select.Option value={false}>False</Select.Option>
+          </Select>
+        </Form.Item>
+      </Col>
+    </Row>
+    <Row gutter={16}>
+      <Col span={24}>
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[{ required: true, message: 'Description required' }]}
+        >
+          <Input.TextArea rows={4} />
+        </Form.Item>
+      </Col>
+    </Row>
+  </Form>
+</Modal>
+
+
     </div>
   );
 };

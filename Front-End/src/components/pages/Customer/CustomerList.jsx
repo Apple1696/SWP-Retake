@@ -36,6 +36,7 @@ export default function CustomerList() {
         fullName: values.name,
         phoneNumber: values.phone,
         email: values.email,
+        loyaltyPoints: values.loyaltyPoints,
       };
 
       const response = await addCustomer(newCustomer);
@@ -68,6 +69,7 @@ export default function CustomerList() {
       name: customer.fullName,
       phone: customer.phoneNumber,
       email: customer.email,
+      loyaltyPoints: customer.loyaltyPoints,
     });
   };
 
@@ -79,6 +81,7 @@ export default function CustomerList() {
         fullName: values.name,
         phoneNumber: values.phone,
         email: values.email,
+        loyaltyPoints: values.loyaltyPoints,
         updated_at: new Date().toISOString(), // Updated to current date and time
       };
 
@@ -191,6 +194,13 @@ export default function CustomerList() {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            name="loyaltyPoints"
+            label="Loyalty Points"
+            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
+          >
+            <Input />
+          </Form.Item>
         </Form>
       </Modal>
 
@@ -222,6 +232,13 @@ export default function CustomerList() {
             name="email"
             label="Email"
             rules={[{ required: true, message: 'Please enter the email' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="loyaltyPoints"
+            label="Loyalty Points"
+            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
           >
             <Input />
           </Form.Item>
