@@ -33,8 +33,8 @@ const Product = () => {
   };
 
   const handleDelete = (row) => {
-    setData((prevData) => prevData.filter((item) => item.id !== row.original.id));
-    axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${row.original.id}`)
+    setData((prevData) => prevData.filter((item) => item.productId !== row.original.productId));
+    axios.delete(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${row.original.productId}`)
       .then(response => {
         console.log('Product deleted:', response.data);
         notification.success({ message: 'Product deleted successfully' });
@@ -52,13 +52,14 @@ const Product = () => {
   const handleAddSubmit = (values) => {
     axios.post('https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products', values)
       .then(response => {
-        setData((prevData) => [...prevData, response.data]);
+        setData((prevData) => [...prevData, values]);
         notification.success({ message: 'Product added successfully' });
       })
       .catch(error => {
         console.error('Error adding product:', error);
         notification.error({ message: 'Failed to add product' });
       });
+    console.log(values);
   
     setIsAddModalVisible(false);
     form.resetFields();
@@ -67,11 +68,11 @@ const Product = () => {
 
   const handleEditSubmit = (values) => {
     const updatedRow = { ...currentRow, ...values };
-    axios.put(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${currentRow.id}`, updatedRow)
+    axios.put(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${currentRow.productId}`, updatedRow)
       .then(response => {
         setData((prevData) =>
           prevData.map((item) =>
-            item.id === updatedRow.id ? { ...item, ...updatedRow } : item
+            item.productId === updatedRow.productId ? { ...item, ...updatedRow } : item
           )
         );
         notification.success({ message: 'Product updated successfully' });
@@ -217,7 +218,6 @@ const Product = () => {
       <Col span={12}>
         <Form.Item
           name="unitPrice"
-          label="Unit Price"
           rules={[{ required: true, message: 'Unit Price required' }]}
         >
           <Input type="number" />
