@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Sell from './../pages/Sell/Sell';
 import Login from './../Login';
@@ -19,10 +19,15 @@ const AllRoutes = () => {
 
   return (
     <div>
-      {location.pathname !== '/login' ? (
+      {location.pathname === '/login' ? (
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      ) : (
         <Sidebar>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/gold-value" element={<GoldValue />} />
             <Route path="/sell" element={<Sell />} />
@@ -37,10 +42,6 @@ const AllRoutes = () => {
             <Route path="/rebuy" element={<Rebuy />} />
           </Routes>
         </Sidebar>
-      ) : (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-        </Routes>
       )}
     </div>
   );
