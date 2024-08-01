@@ -22,7 +22,7 @@ const AllRoutes = () => {
       {location.pathname !== '/login' ? (
         <Sidebar>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/gold-value" element={<GoldValue />} />
             <Route path="/sell" element={<Sell />} />

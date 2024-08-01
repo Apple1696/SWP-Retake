@@ -31,21 +31,21 @@ const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const menuItem = [
-    {
-      path: "/",
-      name: "Dashboard",
-      icon: <FaTh />
-    },
-    {
-      path: "/sell",
-      name: "Sell",
-      icon: <FaMoneyBillWave />
-    },
-    {
-      path: "/gold-value",
-      name: "Gold Value",
-      icon: <AiFillGolden />
-    },
+    // {
+    //   path: "/",
+    //   name: "Dashboard",
+    //   icon: <FaTh />
+    // },
+    // {
+    //   path: "/sell",
+    //   name: "Sell",
+    //   icon: <FaMoneyBillWave />
+    // },
+    // {
+    //   path: "/gold-value",
+    //   name: "Gold Value",
+    //   icon: <AiFillGolden />
+    // },
     {
       path: "/order-report",
       name: "Order Report",
@@ -62,17 +62,17 @@ const Sidebar = ({ children }) => {
       icon: <FaPerson />
 
     },
-    {
-      path: "/promotion",
-      name: "Promotions",
-      icon: <BsCurrencyDollar />
-    },
+    // {
+    //   path: "/promotion",
+    //   name: "Promotions",
+    //   icon: <BsCurrencyDollar />
+    // },
 
-    {
-      path: "/rebuy",
-      name: "Rebuy",
-      icon: <FaHandshake />
-    },
+    // {
+    //   path: "/rebuy",
+    //   name: "Rebuy",
+    //   icon: <FaHandshake />
+    // },
   ]
   return (
     <div className="container">

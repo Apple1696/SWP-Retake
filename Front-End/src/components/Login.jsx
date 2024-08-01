@@ -17,7 +17,7 @@ const Login = () => {
       const token = await UserService.login(email, password);
       if (token) {
         localStorage.setItem('token', token);
-        window.location.href = '/dashboard';
+        window.location.href = '/order-report';
       }
     } catch (error) {
       setErrorMessage('Invalid email or password. Please try again.');
