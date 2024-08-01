@@ -14,45 +14,44 @@ import CreateOrder from '../pages/OrderReport/CreateOrder';
 import Payment from '../pages/Payment/Payment';
 import OrderDetails from '../pages/OrderReport/OrderDetails';
 
+const AuthenticatedRoutes = () => (
+  <Sidebar>
+    <Routes>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/gold-value" element={<GoldValue />} />
+      <Route path="/sell" element={<Sell />} />
+      <Route path="/pick-promotion" element={<PickPromotion />} />
+      <Route path="/order-report" element={<OrderReport />} />
+      <Route path="/create-order" element={<CreateOrder />} />
+      <Route path="/order-details/:orderNumber" element={<OrderDetails />} />
+      <Route path="/customer" element={<CustomerList />} />
+      <Route path="/promotion" element={<Promotion />} />
+      <Route path="/payment/:orderNumber" element={<Payment />} />
+      <Route path="/product" element={<Product />} />
+      <Route path="/rebuy" element={<Rebuy />} />
+    </Routes>
+  </Sidebar>
+);
+
+const UnauthenticatedRoutes = () => (
+  <Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="*" element={<Navigate to="/login" />} />
+  </Routes>
+);
+
 const AllRoutes = () => {
   const location = useLocation();
+  const isAuthenticated = location.pathname !== '/login';
 
-  return (
-    <div>
-      {location.pathname === '/login' ? (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      ) : (
-        <Sidebar>
-          <Routes>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/gold-value" element={<GoldValue />} />
-            <Route path="/sell" element={<Sell />} />
-            <Route path="/pick-promotion" element={<PickPromotion />} />
-            <Route path="/order-report" element={<OrderReport />} />
-            <Route path="/create-order" element={<CreateOrder />} />
-            <Route path="/order-details/:orderNumber" element={<OrderDetails />} />
-            <Route path="/customer" element={<CustomerList />} />
-            <Route path="/promotion" element={<Promotion />} />
-            <Route path="/payment/:orderNumber" element={<Payment />} />
-            <Route path="/product" element={<Product />} />
-            <Route path="/rebuy" element={<Rebuy />} />
-          </Routes>
-        </Sidebar>
-      )}
-    </div>
-  );
+  return isAuthenticated ? <AuthenticatedRoutes /> : <UnauthenticatedRoutes />;
 };
 
-const App = () => {
-  return (
-    <BrowserRouter>
-      <AllRoutes />
-    </BrowserRouter>
-  );
-};
+const App = () => (
+  <BrowserRouter>
+    <AllRoutes />
+  </BrowserRouter>
+);
 
 export default App;
