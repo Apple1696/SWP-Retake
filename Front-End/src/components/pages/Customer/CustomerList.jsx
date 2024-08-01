@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { Button, Stack, IconButton, Typography, Card, CardContent } from '@mui/material';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { Modal, Form, Input, notification } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { fetchCustomers, addCustomer, deleteCustomer, updateCustomer } from '../../../services/CustomerService';
+import { Button, Card, CardContent, IconButton, Stack, Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Form, Input, Modal, notification } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { addCustomer, deleteCustomer, fetchCustomers, updateCustomer } from '../../../services/CustomerService';
 
 export default function CustomerList() {
   const [rows, setRows] = useState([]);
@@ -135,115 +135,160 @@ export default function CustomerList() {
   ];
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#f5f5f5' }}>
-      <Typography variant="h4" gutterBottom style={{ marginBottom: '16px', color: '#333' }}>
-        Customer List
-      </Typography>
-      
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginBottom: '16px', backgroundColor: '#007bff', color: 'white' }}
-        onClick={showAddModal}
-        startIcon={<PlusOutlined />}
-      >
-        Add Customer
-      </Button>
-      
-      <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
-        <CardContent>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5, 10]}
-            disableRowSelectionOnClick
-            getRowId={(row) => row.id} // Specify which property to use as the unique id
-          />
-        </CardContent>
-      </Card>
+<div style={{ padding: '24px', backgroundColor: '#f5f5f5' }}>
+  <Typography variant="h4" gutterBottom style={{ marginBottom: '16px', color: '#333', fontWeight: 'bold' }}>
+    Customer List
+  </Typography>
+  
+  <Button
+    variant="contained"
+    color="primary"
+    style={{
+      marginBottom: '16px',
+      backgroundColor: '#000',
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '16px'
+    }}
+    onClick={showAddModal}
+    startIcon={<PlusOutlined />}
+  >
+    Add Customer
+  </Button>
+  
+  <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '16px' }}>
+    <CardContent>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5, 10]}
+        disableRowSelectionOnClick
+        getRowId={(row) => row.id} // Specify which property to use as the unique id
+        style={{
+          border: 'none',
+          '& .MuiDataGrid-row': {
+            cursor: 'pointer'
+          },
+          '& .MuiDataGrid-cell': {
+            padding: '10px',
+            border: 'none'
+          },
+          '& .MuiDataGrid-columnSeparator': {
+            '&:hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.04)'
+            }
+          }
+        }}
+      />
+    </CardContent>
+  </Card>
 
-      {/* Update Modal */}
-      <Modal
-        title="Update Customer"
-        visible={isEditModalVisible}
-        onOk={handleUpdate}
-        onCancel={() => setIsEditModalVisible(false)}
-        okText="Update"
-        cancelText="Cancel"
+  {/* Update Modal */}
+  <Modal
+    title="Update Customer"
+    visible={isEditModalVisible}
+    onOk={handleUpdate}
+    onCancel={() => setIsEditModalVisible(false)}
+    okText="Update"
+    cancelText="Cancel"
+  >
+    <Form form={editForm} layout="vertical">
+      <Form.Item
+        name="name"
+        label="Name"
+        rules={[{ required: true, message: 'Please enter the name' }]}
       >
-        <Form form={editForm} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter the name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Please enter the email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="loyaltyPoints"
-            label="Loyalty Points"
-            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="phone"
+        label="Phone"
+        rules={[{ required: true, message: 'Please enter the phone number' }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="email"
+        label="Email"
+        rules={[{ required: true, message: 'Please enter the email' }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="loyaltyPoints"
+        label="Loyalty Points"
+        rules={[{ required: true, message: 'Please enter the loyalty points' }]}
+      >
+        <Input />
+      </Form.Item>
+    </Form>
+  </Modal>
 
-      {/* Add Modal */}
-      <Modal
-        title="Add Customer"
-        visible={isAddModalVisible}
-        onOk={handleAdd}
-        onCancel={() => setIsAddModalVisible(false)}
-        okText="Add"
-        cancelText="Cancel"
-      >
-        <Form form={addForm} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter the name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Please enter the email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="loyaltyPoints"
-            label="Loyalty Points"
-            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+  {/* Add Modal */}
+  <Modal
+  title={
+    <div style={{ fontSize: '18px', fontWeight: 'bold', textDecoration: 'underline' }}>
+      Add Customer
     </div>
+  }
+  visible={isAddModalVisible}
+  onOk={handleAdd}
+  onCancel={() => setIsAddModalVisible(false)}
+  okText="Add"
+  cancelText="Cancel"
+  okButtonProps={{
+    style: {
+      backgroundColor: '#000',
+      color: '#fff',
+      borderRadius: '5px'
+    }
+  }}
+  cancelButtonProps={{
+    style: {
+      backgroundColor: '#000',
+      color: '#fff',
+      borderRadius: '5px'
+    }
+  }}
+  bodyStyle={{
+    padding: '20px',
+    border: '1px solid #333',
+    borderRadius: '10px',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
+  }}
+>
+  <Form form={addForm} layout="vertical">
+    <Form.Item
+      name="name"
+      label="Name"
+      rules={[{ required: true, message: 'Please enter the name' }]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      name="phone"
+      label="Phone"
+      rules={[{ required: true, message: 'Please enter the phone number' }]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      name="email"
+      label="Email"
+      rules={[{ required: true, message: 'Please enter the email' }]}
+    >
+      <Input />
+    </Form.Item>
+    <Form.Item
+      name="loyaltyPoints"
+      label="Loyalty Points"
+      rules={[{ required: true, message: 'Please enter the loyalty points' }]}
+    >
+      <Input />
+    </Form.Item>
+  </Form>
+</Modal>
+</div>
   );
 }
