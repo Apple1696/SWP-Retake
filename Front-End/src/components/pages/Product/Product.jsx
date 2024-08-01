@@ -20,6 +20,7 @@ const Product = () => {
     axios.get('https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products')
       .then(response => {
         setData(response.data);
+        console.log(response.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -122,13 +123,13 @@ const Product = () => {
         accessorKey: 'isJewelry',
         header: 'Jewelry',
         size: 15,
-        Cell: ({ value }) => (value ? 'Yes' : 'No'),
+        Cell: ({ row }) => (row.original.isJewelry ? 'True' : 'False'),
       },
       {
         accessorKey: 'isGold',
         header: 'Gold',
         size: 15,
-        Cell: ({ value }) => (value ? 'Yes' : 'No'),
+        Cell: ({ row }) => (row.original.isGold ? 'True' : 'False'),
       },
       {
         accessorKey: 'action',
