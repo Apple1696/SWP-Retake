@@ -114,7 +114,7 @@ const OrderReport = () => {
             color="primary"
             onClick={() => handlePaymentClick(row.original.orderId)}
           >
-            Payment
+            Details
           </Button>
         ),
       },
