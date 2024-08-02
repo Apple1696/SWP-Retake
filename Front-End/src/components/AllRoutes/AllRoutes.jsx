@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation, Navigate } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Sell from './../pages/Sell/Sell';
 import Login from './../Login';
@@ -15,21 +15,21 @@ import Payment from '../pages/Payment/Payment';
 import OrderDetails from '../pages/OrderReport/OrderDetails';
 
 const AuthenticatedRoutes = () => (
-    <Routes> 
-      <Route path="/" element={<Login />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/gold-value" element={<GoldValue />} />
-      <Route path="/sell" element={<Sell />} />
-      <Route path="/pick-promotion" element={<PickPromotion />} />
-      <Route path="/order-report" element={<OrderReport />} />
-      <Route path="/create-order" element={<CreateOrder />} />
-      <Route path="/order-details/:orderNumber" element={<OrderDetails />} />
-      <Route path="/customer" element={<CustomerList />} />
-      <Route path="/promotion" element={<Promotion />} />
-      <Route path="/payment/:orderNumber" element={<Payment />} />
-      <Route path="/product" element={<Product />} />
-      <Route path="/rebuy" element={<Rebuy />} />
-    </Routes>
+  <Routes>
+    <Route path="/" element={<Login />} />
+    <Route path="/dashboard" element={<Dashboard />} />
+    <Route path="/gold-value" element={<GoldValue />} />
+    <Route path="/sell" element={<Sell />} />
+    <Route path="/pick-promotion" element={<PickPromotion />} />
+    <Route path="/order-report" element={<OrderReport />} />
+    <Route path="/create-order" element={<CreateOrder />} />
+    <Route path="/order-details/:orderNumber" element={<OrderDetails />} />
+    <Route path="/customer" element={<CustomerList />} />
+    <Route path="/promotion" element={<Promotion />} />
+    <Route path="/payment/:orderNumber" element={<Payment />} />
+    <Route path="/product" element={<Product />} />
+    <Route path="/rebuy" element={<Rebuy />} />
+  </Routes>
 );
 
 const UnauthenticatedRoutes = () => (
@@ -47,9 +47,9 @@ const AllRoutes = () => {
 };
 
 const App = () => (
-  <BrowserRouter>
+  <Router>
     <AuthenticatedRoutes />
-  </BrowserRouter>
+  </Router>
 );
 
 export default App;
