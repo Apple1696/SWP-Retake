@@ -10,6 +10,8 @@ export default function CreateOrder() {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [products, setProducts] = useState([]);
+  const [productPrices, setProductPrices] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -57,12 +59,30 @@ export default function CreateOrder() {
     fetchProducts(value);
   };
 
-  const handleProductChange = (value, field) => {
-    form.setFieldsValue({
-      orderItems: form.getFieldValue('orderItems').map((item, index) =>
-        index === field.name ? { ...item, productId: value } : item
-      )
-    });
+  const handleProductChange = async (value, field) => {
+    try {
+      const response = await axios.get(`https://jewquelry-group4-ewb0dqgndchcc0cm.eastus-01.azurewebsites.net/api/Products/${value}`);
+      const unitPrice = response.data.unitPrice;
+      setProductPrices(prev => ({ ...prev, [field.name]: unitPrice }));
+      form.setFieldsValue({
+        orderItems: form.getFieldValue('orderItems').map((item, index) =>
+          index === field.name ? { ...item, productId: value, unitPrice: unitPrice } : item
+        )
+      });
+      calculateTotalPrice();
+    } catch (error) {
+      console.error('Error fetching product price:', error);
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    const orderItems = form.getFieldValue('orderItems');
+    const total = orderItems.reduce((sum, item) => {
+      return sum + (item.unitPrice * item.quantity);
+    }, 0);
+    console.log("Total:")
+    console.log(total)
+    setTotalPrice(total);
   };
 
   const handleSubmit = async (values) => {
@@ -82,6 +102,8 @@ export default function CreateOrder() {
       const paymentUrl = response.data.url;
       window.open(paymentUrl, '_blank');
       form.resetFields();
+      setProductPrices({});
+      setTotalPrice(0);
     } catch (error) {
       console.error('Error creating order:', error);
     }
@@ -172,7 +194,7 @@ export default function CreateOrder() {
                       style={{ width: '100%' }}
                     >
                       {products.map(product => (
-                        <Option key={product.productId} value={product.productId}>{product.productCode}</Option>
+                        <Option key={product.productId} value={product.productId}>{product.productName}</Option>
                       ))}
                     </Select>
                   </Form.Item>
@@ -183,28 +205,39 @@ export default function CreateOrder() {
                     fieldKey={[field.fieldKey, 'quantity']}
                     rules={[{ required: true, message: 'Please enter a quantity!' }]}
                   >
-                    <Input type="number" min={1} />
+                    <Input type="number" min={1} onChange={calculateTotalPrice} />
+                  </Form.Item>
+                  <Form.Item
+                    {...field}
+                    label="Unit Price"
+                    name={[field.name, 'unitPrice']}
+                    fieldKey={[field.fieldKey, 'unitPrice']}
+                  >
+                    <Input value={productPrices[field.name] || 0} readOnly />
                   </Form.Item>
                 </div>
               ))}
             </>
           )}
         </Form.List>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginRight: '10px' }}
-          >
-            Create Order
-          </Button>
-          <Button
-            type="default"
-            onClick={cancelOrder}
-            style={{ marginRight: '10px' }}
-          >
-            Cancel
-          </Button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+          <h3>Total Price: {totalPrice}</h3>
+          <div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginRight: '10px' }}
+            >
+              Create Order
+            </Button>
+            <Button
+              type="default"
+              onClick={cancelOrder}
+              style={{ marginRight: '10px' }}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </Form>
     </>
