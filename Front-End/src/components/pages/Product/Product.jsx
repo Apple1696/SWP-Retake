@@ -54,7 +54,7 @@ const Product = () => {
   const handleAddSubmit = (values) => {
     addProduct(values)
       .then((newProduct) => {
-        setData((prevData) => [...prevData, newProduct]);
+        setData((prevData) => [...prevData, values]);
         notification.success({ message: 'Product added successfully' });
       })
       .catch((error) => {
