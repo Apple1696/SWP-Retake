@@ -4,6 +4,7 @@ import { Form, Input, Modal, notification, Space, Table, Tag } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { addCustomer, deleteCustomer, fetchCustomers, updateCustomer } from '../../../services/CustomerService';
+import Sidebar from '../../AllRoutes/Sidebar';
 
 const { Column } = Table;
 
@@ -105,165 +106,167 @@ export default function CustomerList() {
   };
 
   return (
-    <div style={{ padding: '24px', backgroundColor: '#f5f5f5' }}>
-      <Typography variant="h4" gutterBottom style={{ marginBottom: '16px', color: '#333', fontWeight: 'bold' }}>
-        Customer List
-      </Typography>
+    <Sidebar>
+      <div style={{ padding: '24px', backgroundColor: '#f5f5f5' }}>
+        <Typography variant="h4" gutterBottom style={{ marginBottom: '16px', color: '#333', fontWeight: 'bold' }}>
+          Customer List
+        </Typography>
 
-      <Button
-        variant="contained"
-        color="primary"
-        style={{
-          marginBottom: '16px',
-          backgroundColor: '#000',
-          color: 'white',
-          fontWeight: 'bold',
-          fontSize: '16px'
-        }}
-        onClick={showAddModal}
-        startIcon={<PlusOutlined />}
-      >
-        Add Customer
-      </Button>
-
-      <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '16px' }}>
-        <CardContent>
-          <Table dataSource={rows} pagination={{ pageSize: 5 }}>
-            <Column title="Name" dataIndex="fullName" key="fullName" />
-            <Column title="Phone" dataIndex="phoneNumber" key="phoneNumber" />
-            <Column title="Email" dataIndex="email" key="email" />
-            <Column title="Points" dataIndex="loyaltyPoints" key="loyaltyPoints" />
-            <Column
-              title="Action"
-              key="action"
-              render={(_, record) => (
-                <Space size="middle">
-                  <IconButton
-                    color="primary"
-                    onClick={() => showUpdateModal(record)}
-                    style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
-                  >
-                    <FaEdit />
-                  </IconButton>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => handleDelete(record.key)}
-                    style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
-                  >
-                    <FaTrash />
-                  </IconButton>
-                </Space>
-              )}
-            />
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Update Modal */}
-      <Modal
-        title="Update Customer"
-        visible={isEditModalVisible}
-        onOk={handleUpdate}
-        onCancel={() => setIsEditModalVisible(false)}
-        okText="Update"
-        cancelText="Cancel"
-      >
-        <Form form={editForm} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter the name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Please enter the email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="loyaltyPoints"
-            label="Loyalty Points"
-            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* Add Modal */}
-      <Modal
-        title={
-          <div style={{ fontSize: '18px', fontWeight: 'bold', textDecoration: 'underline' }}>
-            Add Customer
-          </div>
-        }
-        visible={isAddModalVisible}
-        onOk={handleAdd}
-        onCancel={() => setIsAddModalVisible(false)}
-        okText="Add"
-        cancelText="Cancel"
-        okButtonProps={{
-          style: {
+        <Button
+          variant="contained"
+          color="primary"
+          style={{
+            marginBottom: '16px',
             backgroundColor: '#000',
-            color: '#fff',
-            borderRadius: '5px'
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '16px'
+          }}
+          onClick={showAddModal}
+          startIcon={<PlusOutlined />}
+        >
+          Add Customer
+        </Button>
+
+        <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', padding: '16px' }}>
+          <CardContent>
+            <Table dataSource={rows} pagination={{ pageSize: 5 }}>
+              <Column title="Name" dataIndex="fullName" key="fullName" />
+              <Column title="Phone" dataIndex="phoneNumber" key="phoneNumber" />
+              <Column title="Email" dataIndex="email" key="email" />
+              <Column title="Points" dataIndex="loyaltyPoints" key="loyaltyPoints" />
+              <Column
+                title="Action"
+                key="action"
+                render={(_, record) => (
+                  <Space size="middle">
+                    <IconButton
+                      color="primary"
+                      onClick={() => showUpdateModal(record)}
+                      style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
+                    >
+                      <FaEdit />
+                    </IconButton>
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDelete(record.key)}
+                      style={{ backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}
+                    >
+                      <FaTrash />
+                    </IconButton>
+                  </Space>
+                )}
+              />
+            </Table>
+          </CardContent>
+        </Card>
+
+        {/* Update Modal */}
+        <Modal
+          title="Update Customer"
+          visible={isEditModalVisible}
+          onOk={handleUpdate}
+          onCancel={() => setIsEditModalVisible(false)}
+          okText="Update"
+          cancelText="Cancel"
+        >
+          <Form form={editForm} layout="vertical">
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Please enter the name' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              label="Phone"
+              rules={[{ required: true, message: 'Please enter the phone number' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[{ required: true, message: 'Please enter the email' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="loyaltyPoints"
+              label="Loyalty Points"
+              rules={[{ required: true, message: 'Please enter the loyalty points' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {/* Add Modal */}
+        <Modal
+          title={
+            <div style={{ fontSize: '18px', fontWeight: 'bold', textDecoration: 'underline' }}>
+              Add Customer
+            </div>
           }
-        }}
-        cancelButtonProps={{
-          style: {
-            backgroundColor: '#000',
-            color: '#fff',
-            borderRadius: '5px'
-          }
-        }}
-        bodyStyle={{
-          padding: '20px',
-          border: '1px solid #333',
-          borderRadius: '10px',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
-        }}
-      >
-        <Form form={addForm} layout="vertical">
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please enter the name' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="phone"
-            label="Phone"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Please enter the email' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="loyaltyPoints"
-            label="Loyalty Points"
-            rules={[{ required: true, message: 'Please enter the loyalty points' }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
+          visible={isAddModalVisible}
+          onOk={handleAdd}
+          onCancel={() => setIsAddModalVisible(false)}
+          okText="Add"
+          cancelText="Cancel"
+          okButtonProps={{
+            style: {
+              backgroundColor: '#000',
+              color: '#fff',
+              borderRadius: '5px'
+            }
+          }}
+          cancelButtonProps={{
+            style: {
+              backgroundColor: '#000',
+              color: '#fff',
+              borderRadius: '5px'
+            }
+          }}
+          bodyStyle={{
+            padding: '20px',
+            border: '1px solid #333',
+            borderRadius: '10px',
+            boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)'
+          }}
+        >
+          <Form form={addForm} layout="vertical">
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Please enter the name' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              label="Phone"
+              rules={[{ required: true, message: 'Please enter the phone number' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[{ required: true, message: 'Please enter the email' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="loyaltyPoints"
+              label="Loyalty Points"
+              rules={[{ required: true, message: 'Please enter the loyalty points' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
+    </Sidebar>
   );
 }

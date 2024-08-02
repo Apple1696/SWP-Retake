@@ -15,9 +15,8 @@ import Payment from '../pages/Payment/Payment';
 import OrderDetails from '../pages/OrderReport/OrderDetails';
 
 const AuthenticatedRoutes = () => (
-  <Sidebar>
-    <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+    <Routes> 
+      <Route path="/" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/gold-value" element={<GoldValue />} />
       <Route path="/sell" element={<Sell />} />
@@ -31,7 +30,6 @@ const AuthenticatedRoutes = () => (
       <Route path="/product" element={<Product />} />
       <Route path="/rebuy" element={<Rebuy />} />
     </Routes>
-  </Sidebar>
 );
 
 const UnauthenticatedRoutes = () => (
@@ -50,7 +48,7 @@ const AllRoutes = () => {
 
 const App = () => (
   <BrowserRouter>
-    <AllRoutes />
+    <AuthenticatedRoutes />
   </BrowserRouter>
 );
 

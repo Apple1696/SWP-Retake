@@ -10,6 +10,7 @@ import {
   deleteProduct,
   updateProduct,
 } from './../../../services/ProductService';
+import Sidebar from '../../AllRoutes/Sidebar';
 
 
 const { Option } = Select;
@@ -146,6 +147,7 @@ const Product = () => {
   );
 
   return (
+    <Sidebar>
     <div style={{ backgroundColor: '#f0f0f0', padding: '20px' }}>
       <h1 style={{ color: 'black', fontSize: '24px', fontWeight: 'bold' }}>Product List</h1>
       <Button
@@ -348,6 +350,7 @@ const Product = () => {
         </Form>
       </Modal>
     </div>
+    </Sidebar>
   );
 };
 

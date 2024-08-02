@@ -8,6 +8,7 @@ import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './OrderReport.css';
 import handleRedirect from './../../HandleFunction/handleRedirect';
+import Sidebar from '../../AllRoutes/Sidebar';
 
 const OrderReport = () => {
   const [data, setData] = useState([]);
@@ -127,13 +128,13 @@ const OrderReport = () => {
   });
 
   return (
-    <div>
+    <Sidebar>
       <h1>Order Report</h1>
       <button className="create-order-button" onClick={createOrder}>
         Create New Order
       </button>
       <MaterialReactTable table={table} />
-    </div>
+    </Sidebar>
   );
 };
 
