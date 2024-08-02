@@ -23,7 +23,7 @@ const isAuthenticated = () => {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />,
+    element: isAuthenticated() ? <OrderReport /> : <Navigate to="/login" />,
   },
   {
     path: "/login",
